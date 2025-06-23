@@ -1,0 +1,28 @@
+[project]
+name = "tgbot"
+version = "0.1.0"
+description = "llm tg bot"
+readme = "README.md"
+requires-python = "==3.13.5"
+dependencies = [
+    "dotenv>=0.9.9",
+]
+
+[tool.ruff]
+src = ["src"]
+include = ["src/**.py"]
+target-version = "py313"
+line-length = 105
+
+[tool.ruff.lint]
+select = [
+    "ALL"
+]
+ignore = [
+    "D"
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.12.0",
+]
