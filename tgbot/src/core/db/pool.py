@@ -26,7 +26,7 @@ class SQlitePool:
 
     async def close(self) -> None:
         while not self._pool.empty():
-            session: aiosqlite.Connection = self._pool.get()
+            session: aiosqlite.Connection = await self._pool.get()
             await session.close()
         self._initialized = False
 
