@@ -3,7 +3,7 @@ import asyncio
 from src.core.lifespan import init_application
 
 
-async def start_bot():
+async def start_bot() -> None:
     async with init_application() as (bot, dp):
         await dp.start_polling(bot)
 

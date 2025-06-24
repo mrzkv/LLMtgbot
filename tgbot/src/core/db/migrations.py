@@ -1,9 +1,10 @@
-from src.tables import tables
 from aiosqlite import Connection
+
+from src.tables import tables
 
 
 class Migration:
-    def __init__(self, session: Connection):
+    def __init__(self, session: Connection) -> None:
         self._session = session
 
     async def create_all(self) -> None:
@@ -13,6 +14,6 @@ class Migration:
 
     async def drop_all(self) -> None:
         for table in tables:
-            table_name = table.get_name()
+            table_name = table(self._session).__tablename__
             await self._session.execute(f"DROP TABLE IF EXISTS {table_name};")
         await self._session.commit()

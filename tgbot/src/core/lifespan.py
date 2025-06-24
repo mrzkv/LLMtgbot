@@ -3,13 +3,12 @@ from logging import getLogger
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
-import sys
 
 from src.core.config import config
+from src.core.db.migrations import Migration
 from src.core.db.pool import sqlite_pool
 from src.core.logger import setup_logging
 from src.handlers import routers
-from src.core.db.migrations import Migration
 
 
 @asynccontextmanager
@@ -34,7 +33,7 @@ async def init_application() -> tuple[Bot, Dispatcher]:
         logger.info("Creating bot")
         bot = Bot(
             token=config.bot.token,
-            default=DefaultBotProperties(parse_mode="HTML")
+            default=DefaultBotProperties(parse_mode="HTML"),
         )
 
         logger.info("Creating dispatcher")

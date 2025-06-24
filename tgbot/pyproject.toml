@@ -23,7 +23,7 @@ select = [
 ]
 ignore = [
     "D", "EM101", "PLW1508",
-    "TRY003"
+    "TRY003", "TRY400", "G004", "BLE001"
 ]
 
 [dependency-groups]
