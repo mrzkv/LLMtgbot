@@ -1,31 +1,30 @@
+import logging
+from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from sys import stdout
 
-from loguru import logger
-
 
 def setup_logging() -> None:
-    log_path = Path("tgbot/data/logs/bot.log")
+    log_path = Path("data/logs/bot.log")
     log_path.parent.mkdir(parents=True, exist_ok=True)
 
-    logger.remove()
+    root_logger = logging.getLogger()
+    root_logger.handlers.clear()
 
-    logger.add(
-        sink=stdout,
-        level="DEBUG",
-        format="<green>{time:HH:mm:ss}</green> | "
-               "<level>{level: <8}</level> | "
-               "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - "
-               "<level>{message}</level>",
-        colorize=True,
-    )
+    log_format = "%(asctime)s | %(levelname)-8s | %(name)s:%(funcName)s:%(lineno)d - %(message)s"
+    date_format = "%H:%M:%S"
 
-    logger.add(
-        str(log_path),
-        level="INFO",
-        rotation="1 MB",
-        retention="10 days",
-        compression="zip",
+    console_handler = logging.StreamHandler(stdout)
+    console_handler.setFormatter(logging.Formatter(log_format, datefmt=date_format))
+
+    file_handler = RotatingFileHandler(
+        filename=log_path,
+        maxBytes=1 * 1024 * 1024,  # 1 MB
+        backupCount=10,
         encoding="utf-8",
-        enqueue=True,
     )
+    file_handler.setFormatter(logging.Formatter(log_format, datefmt=date_format))
+
+    root_logger.setLevel(logging.DEBUG)
+    root_logger.addHandler(console_handler)
+    root_logger.addHandler(file_handler)
