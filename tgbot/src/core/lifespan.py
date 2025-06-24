@@ -1,3 +1,4 @@
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from logging import getLogger
 
@@ -12,7 +13,7 @@ from src.handlers import routers
 
 
 @asynccontextmanager
-async def init_application() -> tuple[Bot, Dispatcher]:
+async def init_application() -> AsyncGenerator[tuple[Bot, Dispatcher]]:
     setup_logging()
     logger = getLogger(__name__)
     logger.info("Logging configured")
