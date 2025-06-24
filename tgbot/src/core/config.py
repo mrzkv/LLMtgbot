@@ -1,7 +1,7 @@
+from ast import literal_eval
 from dataclasses import dataclass, field
 from logging import getLevelNamesMapping
 from os import getenv
-from ast import literal_eval
 
 from dotenv import load_dotenv
 
@@ -16,40 +16,35 @@ class BotConfig:
 @dataclass
 class LogConfig:
     level: str
-    @property
-    def level_value(self) -> int:
-        return getLevelNamesMapping().get(self.level)
+    level_value: int = field(init=False)
+
+    def __post_init__(self) -> None:
+        self.level_value = getLevelNamesMapping().get(self.level, 10)  # default DEBUG
+
 
 
 @dataclass
 class DBConfig:
-    driver: str
-    host: str
-    port: int
-    user: str
-    password: str
-    database: str
-
-    @property
-    def async_url(self) -> str:
-        if self.driver == "sqlite":
-            return f"sqlite+aiosqlite:///{self.database}"
-
-        return f"{self.driver}+asyncpg://{self.user}:{self.password}@{self.host}:{self.port}/{self.database}"
-
+    path: str
+    pool_size: int
 
 @dataclass
 class AppConfig:
     bot: BotConfig
     log: LogConfig
+    db: DBConfig
 
-
-config = AppConfig(
+config: AppConfig = AppConfig(
     bot=BotConfig(
         token=getenv("BOT_TOKEN"),
-        admin_ids=literal_eval(getenv("BOT_ADMIN_IDS", "[]"))
+        admin_ids=literal_eval(getenv("BOT_ADMIN_IDS", "[]")),
     ),
     log=LogConfig(
         level=getenv("LOG_LEVEL"),
     ),
+    db=DBConfig(
+        path=getenv("DB_PATH"),
+        pool_size=int(getenv("DB_POOL_SIZE", "2")),
+    ),
 )
+
