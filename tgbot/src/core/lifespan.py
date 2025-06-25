@@ -41,7 +41,7 @@ async def init_application() -> AsyncGenerator[tuple[Bot, Dispatcher]]:
         dp = Dispatcher()
 
         logger.info("Include routers")
-        dp.include_routers(routers)
+        dp.include_routers(*routers)
 
         logger.info("Deleting webhook")
         await bot.delete_webhook(drop_pending_updates=True)
