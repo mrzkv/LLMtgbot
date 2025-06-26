@@ -22,10 +22,6 @@ async def init_application() -> AsyncGenerator[tuple[Bot, Dispatcher]]:
     dp = None
 
     try:
-        logger.info("Filling db connection pool")
-        await sqlite_pool.init()
-        logger.info("Filling complete")
-
         logger.info("Creating tables")
         async with sqlite_pool.get_async_session() as session:
             await Migration(session).create_all()
