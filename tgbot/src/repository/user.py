@@ -6,7 +6,7 @@ from src.tables.telegram_users import TelegramUser, TelegramUserDTO, TelegramUse
 from .base import AbstractRepository
 
 
-class UserRepository(AbstractRepository[TelegramUserDTO]):
+class UserRepository(AbstractRepository):
     def __init__(
             self,
             session: Connection,

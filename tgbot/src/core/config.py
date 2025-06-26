@@ -27,6 +27,7 @@ class LogConfig:
 class DBConfig:
     path: str
     pool_size: int
+    max_overflow: int
 
 @dataclass
 class AppConfig:
@@ -45,6 +46,7 @@ config: AppConfig = AppConfig(
     db=DBConfig(
         path=getenv("DB_PATH"),
         pool_size=int(getenv("DB_POOL_SIZE", "2")),
+        max_overflow=int(getenv("DB_MAX_OVERFLOW", "1"))
     ),
 )
 
