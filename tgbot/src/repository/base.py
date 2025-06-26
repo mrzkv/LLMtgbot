@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
-from typing import Generic, TypeVar
+from typing import TypeVar
 
 T = TypeVar("T")
 
-class AbstractRepository(ABC, Generic[T]):
+class AbstractRepository(ABC):
 
     @abstractmethod
     async def get(self, **kwargs: dict) -> T | None:
