@@ -4,6 +4,7 @@ from logging import getLogger
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
 
 from src.core.config import config
 from src.core.db.migrations import Migration
@@ -30,7 +31,9 @@ async def init_application() -> AsyncGenerator[tuple[Bot, Dispatcher]]:
         logger.info("Creating bot")
         bot = Bot(
             token=config.bot.token,
-            default=DefaultBotProperties(parse_mode="HTML"),
+            default=DefaultBotProperties(
+                parse_mode=ParseMode.MARKDOWN_V2,
+            ),
         )
 
         logger.info("Creating dispatcher")
@@ -62,9 +65,3 @@ async def init_application() -> AsyncGenerator[tuple[Bot, Dispatcher]]:
                 await bot.session.close()
             except Exception as e:
                 logger.error(f"Closing bot session failed: {e}")
-
-        try:
-            logger.info("Closing db connection pool")
-            await sqlite_pool.close()
-        except Exception as e:
-            logger.error(f"Closing db connection pool failed: {e}")

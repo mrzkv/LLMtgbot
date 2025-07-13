@@ -1,5 +1,4 @@
-import asyncio
-from collections.abc import AsyncGenerator
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 import aiosqlite
@@ -12,7 +11,7 @@ class SQlitePool:
         self._db_path = db_path
 
     @asynccontextmanager
-    async def get_async_session(self):
+    async def get_async_session(self) -> AsyncIterator[aiosqlite.Connection]:
         session = await aiosqlite.connect(self._db_path)
         session.row_factory = aiosqlite.Row
         try:

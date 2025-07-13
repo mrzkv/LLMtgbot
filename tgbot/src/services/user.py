@@ -32,7 +32,6 @@ class UserService:
 
         if not db_user:
             await self._repo.add(user_input_dto)
-            await self._repo.commit()
         else:
             user_dto: TelegramUserDTO = TelegramUserDTO.from_input(
                 row_id=db_user.id,
@@ -40,10 +39,6 @@ class UserService:
             )
             if db_user != user_dto:
                 await self._repo.update(user_dto)
-                await self._repo.commit()
-
-        # Create Keyboards
-
 
 class UserServiceFactory:
     """UserService factory"""
@@ -54,6 +49,5 @@ class UserServiceFactory:
         else:
             raise TypeError(f"Unsupported event: {type(event)}")
 
-        async with sqlite_pool.get_async_session() as session:
-            repo = UserRepository(session)
-            return UserService(user, repo)
+        repo = UserRepository(sqlite_pool.get_async_session)
+        return UserService(user, repo)

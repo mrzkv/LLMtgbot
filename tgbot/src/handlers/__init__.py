@@ -1,5 +1,7 @@
-from .start import router
+from . import menu, start, un_handled
 
 routers = [
-    router,
+    start.router,
+    menu.router,
+    un_handled.router,
 ]
