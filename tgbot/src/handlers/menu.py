@@ -4,7 +4,7 @@ from aiogram import Router
 from aiogram.types import CallbackQuery
 
 from src.keyboards.builder import InlineKeyboardFactory
-from src.keyboards.decoder import BackCallback, LanguageCallback, MenuCallback
+from src.keyboards.callback import BackCallback, LanguageCallback, MenuCallback
 from src.text.builder import TextBuilder
 
 router = Router()
