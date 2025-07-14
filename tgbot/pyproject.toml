@@ -8,6 +8,7 @@ dependencies = [
     "aiogram==3.20.0.post0",
     "aiosqlite==0.21.0",
     "dotenv==0.9.9",
+    "orjson>=3.10.18",
 ]
 
 [dependency-groups]
@@ -20,7 +21,7 @@ dev = [
 src = ["src"]
 include = ["src/**.py"]
 target-version = "py313"
-line-length = 105
+line-length = 112
 
 [tool.ruff.lint]
 select = [
@@ -29,5 +30,5 @@ select = [
 ignore = [
     "D", "EM101", "PLW1508", "EM102",
     "TRY003", "TRY400", "G004", "BLE001",
-    "S608"
+    "S608", "FBT002", "FBT001", "PLR0913"
 ]
