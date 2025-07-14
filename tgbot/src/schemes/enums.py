@@ -14,3 +14,13 @@ class Models(Enum):
     add = "add"
     list = "list"
     delete = "delete"
+
+class AuthMethod(Enum):
+    NONE = "none"
+    COOKIES = "cookies"
+    HEADERS = "headers"
+
+class Confirmation(Enum):
+    """Confirmation options."""
+    YES = "yes"
+    NO = "no"
