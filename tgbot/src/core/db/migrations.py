@@ -14,6 +14,5 @@ class Migration:
 
     async def drop_all(self) -> None:
         for table in tables:
-            table_name = table.get_table_name()
-            await self._session.execute(f"DROP TABLE IF EXISTS {table_name};")
+            await self._session.execute(f"DROP TABLE IF EXISTS {table.get_name()};")
         await self._session.commit()

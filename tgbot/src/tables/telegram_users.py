@@ -1,3 +1,4 @@
+from dataclasses import field
 
 from pydantic.dataclasses import dataclass
 
@@ -20,7 +21,7 @@ class TelegramUser(Base):
         );
     """)
 
-@dataclass
+@dataclass(frozen=True)
 class TelegramUserInputDTO:
     user_id: int
     is_bot: bool
@@ -30,8 +31,8 @@ class TelegramUserInputDTO:
     language_code: str | None
     added_date: str
 
-@dataclass
-class TelegramUserDTO: # noqa: PLW1641
+@dataclass(frozen=True)
+class TelegramUserDTO:
     id: int
     user_id: int
     is_bot: bool
@@ -39,21 +40,17 @@ class TelegramUserDTO: # noqa: PLW1641
     last_name: str | None
     username: str | None
     language_code: str | None
-    added_date: str
+    added_date: str = field(compare=False, hash=False)
 
     @classmethod
     def from_input(cls, row_id: int, input_dto: TelegramUserInputDTO) -> "TelegramUserDTO":
-        return cls(id=row_id, **vars(input_dto))
-
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, TelegramUserDTO):
-            return False
-
-        ignore_fields = {"added_date"}
-
-        for field in self.__dataclass_fields__:
-            if field in ignore_fields:
-                continue
-            if getattr(self, field) != getattr(other, field):
-                return False
-        return True
+        return cls(
+            id=row_id,
+            user_id=input_dto.user_id,
+            is_bot=input_dto.is_bot,
+            first_name=input_dto.first_name,
+            last_name=input_dto.last_name,
+            username=input_dto.username,
+            language_code=input_dto.language_code,
+            added_date=input_dto.added_date,
+        )

@@ -8,8 +8,8 @@ from .base import AbstractRepository
 
 
 class UserRepository(AbstractRepository):
-    def __init__(self, db_session_factory: Callable[[], Awaitable[AsyncGenerator[Connection]]]) -> None:
-        self._db_session_factory = db_session_factory
+    def __init__(self, db_session_factory: Callable[[],Awaitable[AsyncGenerator[Connection]]]) -> None:
+        super().__init__(db_session_factory, TelegramUser)
 
     async def get(self, **kwargs: dict[str, int | str]) -> TelegramUserDTO | None:
         if len(kwargs) != 1:
@@ -21,21 +21,20 @@ class UserRepository(AbstractRepository):
         if column not in valid_fields:
             raise ValueError(f"Invalid column name: {column}")
 
-        query = f"SELECT * FROM {TelegramUser.get_table_name()} WHERE {column} = ? LIMIT 1"
+        query = f"SELECT * FROM {self._table_name} WHERE {column} = ? LIMIT 1"
         async with self._db_session_factory() as session:
             result = await session.execute(query, (value,))
             row = await result.fetchone()
-        if not row:
-            return None
-        return TelegramUserDTO(**dict(row))
+        return TelegramUserDTO(**dict(row)) if row else None
 
     async def add(self, dto: TelegramUserInputDTO) -> TelegramUserDTO:
         query = (f"""
-        INSERT INTO {TelegramUser.get_table_name()} (
-            user_id, is_bot, first_name, last_name,
-            username, language_code, added_date
-        ) VALUES (?, ?, ?, ?, ?, ?, ?)
-        RETURNING *""")
+            INSERT INTO {self._table_name} (
+                user_id, is_bot, first_name, last_name,
+                username, language_code, added_date
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)
+            RETURNING *
+        """)
         async with self._db_session_factory() as session:
             result = await session.execute(
                 sql=query,
@@ -57,26 +56,24 @@ class UserRepository(AbstractRepository):
             self,
             offset: int = 0,
             limit: int = 100,
-    ) -> list[TelegramUserDTO]:
-        query = f"SELECT * FROM {TelegramUser.get_table_name()} ORDER BY id LIMIT ? OFFSET ?"
+    ) -> list[TelegramUserDTO | None]:
+        query = f"SELECT * FROM {self._table_name} ORDER BY id LIMIT ? OFFSET ?"
         async with self._db_session_factory() as session:
             result = await session.execute(query, (limit, offset))
             rows = await result.fetchall()
-        return [TelegramUserDTO(**dict(row)) for row in rows]
+        return [TelegramUserDTO(**dict(row)) for row in rows] if rows else []
 
     async def delete(self, row_id: int) -> TelegramUserDTO | None:
-        query = f"DELETE FROM {TelegramUser.get_table_name()} WHERE id = ? RETURNING *"
+        query = f"DELETE FROM {self._table_name} WHERE id = ? RETURNING *"
         async with self._db_session_factory() as session:
             result = await session.execute(query, (row_id,))
             row = await result.fetchone()
             await session.commit()
-        if not row:
-            return None
-        return TelegramUserDTO(**dict(row))
+        return TelegramUserDTO(**dict(row)) if row else None
 
     async def update(self, dto: TelegramUserDTO) -> TelegramUserDTO | None:
         query = f"""
-                UPDATE {TelegramUser.get_table_name()}
+                UPDATE {self._table_name}
                 SET user_id = ?,
                     is_bot = ?,
                     first_name = ?,
@@ -103,6 +100,4 @@ class UserRepository(AbstractRepository):
             )
             row = await result.fetchone()
             await session.commit()
-        if not row:
-            return None
-        return TelegramUserDTO(**dict(row))
+        return TelegramUserDTO(**dict(row)) if row else None
