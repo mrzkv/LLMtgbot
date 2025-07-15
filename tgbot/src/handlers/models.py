@@ -9,9 +9,8 @@ from src.keyboards.callback import AICallback, AuthMethodCallback, HTTPMethodCal
 from src.schemes.enums import AuthMethod, Models
 from src.states.ai import AddAIStates
 from src.text.builder import TextBuilder
-from src.utils.validators.url import URLValidator
 from src.utils.validators.auth_data import AuthDataValidator
-
+from src.utils.validators.url import URLValidator
 
 router = Router()
 
@@ -127,7 +126,6 @@ async def handle_auth_data_input(
 
         ai_url = user_data.get("ai_url")
         http_method = user_data.get("http_method")
-        auth_method = auth_method
         auth_data = auth_data_input
         text = text_builder.confirm_ai_config_prompt(
             url = ai_url,

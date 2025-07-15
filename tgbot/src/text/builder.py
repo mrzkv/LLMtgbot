@@ -175,30 +175,29 @@ class TextBuilder:
     def list_ai_models(self) -> str:
         if self._language == Languages.en:
             return "Here is your *list of AI models*\\."
-        elif self._language == Languages.ru:
+        if self._language == Languages.ru:
             return "Вот ваш *список моделей ИИ*\\."
         return "..."
 
     def delete_ai_prompt(self) -> str:
         if self._language == Languages.en:
             return "Please select the *AI to delete*\\."
-        elif self._language == Languages.ru:
+        if self._language == Languages.ru:
             return "Пожалуйста, выберите *ИИ для удаления*\\."
         return "..."
 
     def invalid_url(self) -> str:
         if self._language == Languages.en:
             return "Invalid URL ❌"
-        elif self._language == Languages.ru:
+        if self._language == Languages.ru:
             return "Неправильная ссылка ❌"
         return "..."
 
     def invalid_auth_creds(self, auth_method: AuthMethod) -> str:
         if self._language == Languages.en:
             return f"Invalid credentials for {auth_method.value}\\."
-        elif self._language == Languages.ru:
+        if self._language == Languages.ru:
             if auth_method == AuthMethod.HEADERS:
                 return "Некорректные данные для Заголовка\\."
-            else:
-                return "Некорректные данные для Куки\\."
+            return "Некорректные данные для Куки\\."
         return "..."

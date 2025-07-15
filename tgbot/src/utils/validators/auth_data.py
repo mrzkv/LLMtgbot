@@ -19,8 +19,7 @@ class AuthDataValidator:
     def _as_cookie(self) -> bool:
         return self._validate_with_length("=")
 
-    def validate(self, auth_method: AuthMethod):
+    def validate(self, auth_method: AuthMethod) -> bool:
         if auth_method == AuthMethod.COOKIES:
             return self._as_cookie()
-        else:
-            return self._as_header()
+        return self._as_header()
