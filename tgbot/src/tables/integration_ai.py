@@ -30,7 +30,7 @@ class IntegrationAIInputDTO:
     """
     creator_id: int | None # creator_id can be None if not associated with a specific user
     url: str
-    auth_type: int # 0: No Auth, 1: Basic Auth, 2: Bearer Token
+    auth_type: int # 0: No Auth, 1: Cookies, 2: Header
     auth_creds: str | None # Authentication credentials, can be None if no auth
     http_method: int # 0: GET, 1: POST, 2: PUT, 3: DELETE, 4: PATCH
 

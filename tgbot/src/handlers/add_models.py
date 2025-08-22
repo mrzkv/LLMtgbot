@@ -5,8 +5,9 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 
 from src.keyboards.builder import InlineKeyboardFactory
-from src.keyboards.callback import AICallback, AuthMethodCallback, HTTPMethodCallback
-from src.schemes.enums import AuthMethod, Models
+from src.keyboards.callback import AICallback, AuthMethodCallback, ConfirmationCallback, HTTPMethodCallback
+from src.schemes.enums import AuthMethod, Confirmation, Models
+from src.services.model import LLMService, LLMServiceFactory
 from src.states.ai import AddAIStates
 from src.text.builder import TextBuilder
 from src.utils.validators.auth_data import AuthDataValidator
@@ -145,3 +146,31 @@ async def handle_auth_data_input(
         text=text,
         reply_markup=reply_markup,
     )
+
+
+@router.callback_query(
+    ConfirmationCallback.filter(),
+    AddAIStates.confirming_config,
+)
+async def handle_confirmation_confirm(
+        callback: CallbackQuery,
+        callback_data: ConfirmationCallback,
+        state: FSMContext,
+) -> None:
+    # TODO(mrzkv): Create text/keyboards
+    await callback.answer()
+    selected_language = callback_data.language
+    if callback_data.choice == Confirmation.YES:
+        # Add new AI to db, and return user to Current AI Menu
+        service: LLMService = LLMServiceFactory.create(callback)
+        ai_data = await state.get_data()
+        new_ai = await service.add_new_ai(
+            ai_url = ai_data.get("ai_url"),
+            http_method = ai_data.get("http_method"),
+            auth_method = ai_data.get("auth_method"),
+            auth_creds= ai_data.get("auth_data"),
+        )
+
+    else:
+        # Return to AI Menu
+        pass

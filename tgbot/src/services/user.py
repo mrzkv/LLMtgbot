@@ -43,9 +43,9 @@ class UserService:
 class UserServiceFactory:
     """UserService factory"""
     @staticmethod
-    async def create(event: Message | CallbackQuery) -> UserService:
+    def create(event: Message | CallbackQuery) -> UserService:
         if isinstance(event, (CallbackQuery, Message)):
-            user = event.from_user
+            user: User = event.from_user
         else:
             raise TypeError(f"Unsupported event: {type(event)}")
 

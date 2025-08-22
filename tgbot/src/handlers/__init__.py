@@ -1,9 +1,9 @@
-from . import menu, models, start, un_handled
+from . import add_models, menu, start, un_handled
 
 routers = [
     start.router,
     menu.router,
-    models.router,
+    add_models.router,
 
 
     # Stay last

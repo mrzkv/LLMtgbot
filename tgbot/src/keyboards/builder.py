@@ -220,3 +220,4 @@ class InlineKeyboardFactory:
 
         self._builder.adjust(2)
         return self._builder.as_markup()
+

@@ -19,5 +19,5 @@ async def start_handler(message: Message) -> None:
         text=TextBuilder.start_handler(),
         reply_markup=InlineKeyboardFactory.choose_language(),
     )
-    service: UserService = await UserServiceFactory.create(message)
+    service: UserService = UserServiceFactory.create(message)
     await service.add_new_user()

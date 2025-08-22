@@ -12,7 +12,7 @@ TableType = TypeVar("TableType", bound=Base)
 class AbstractRepository(ABC):
     def __init__(
             self,
-            db_session_factory: Callable[[],Awaitable[AsyncGenerator[Connection]]],
+            db_session_factory: Callable[[], Awaitable[AsyncGenerator[Connection]]],
             table_class: TableType,
     ) -> None:
         self._db_session_factory = db_session_factory
